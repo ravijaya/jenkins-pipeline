@@ -15,11 +15,6 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
-        // stage('Cloning Git') {
-        //     steps {
-        //         git 'https://github.com/gnschenker/jenkins-pipeline.git'
-        //     }
-        // }
         stage("Build"){
             steps {
                 sh 'npm install'
