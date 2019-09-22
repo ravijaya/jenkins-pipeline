@@ -24,8 +24,7 @@ pipeline {
         }
         stage('Build & Push Docker image') {
             steps {
-                // sh './jenkins/scripts/build_and_push.sh'
-                sh './test.sh'
+                sh './jenkins/scripts/build-and-push.sh'
             }
         }
         stage('Deploy to Staging') {
