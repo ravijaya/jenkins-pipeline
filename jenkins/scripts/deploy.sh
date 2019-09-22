@@ -11,10 +11,20 @@ docker container run -d \
     --net test-net \
     $registry:$BUILD_NUMBER
 
+read -d '' wait_for << EOF
+echo "Waiting for API to listen on port 3000..."
+
+while ! nc -z api 3000; do   
+  sleep 0.1 # wait for 1/10 of the second before check again
+  printf "."
+done
+
+echo "API ready on port 3000!"
+EOF
+
 docker container run --rm \
-    -v /home/fod/ch07/jenkins-pipeline/jenkins/scripts:/scripts \
     --net test-net \
-    node:12.10-alpine sh -c "/scripts/wait-for.sh"
+    node:12.10-alpine sh -c "$wait_for"
 
 echo "Smoke tests..."
 docker container run --name tester \
