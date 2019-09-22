@@ -3,10 +3,12 @@
 echo "Deploying app ($registry:$BUILD_NUMBER)..."
 docker network create test-net
 
-docker container run --name api \
-    --rm -d \
+docker container run -d \
+    --name api \
     --net test-net \
     $registry:$BUILD_NUMBER
+
+./jenkins/scripts/wait-for.sh
 
 echo "Smoke tests..."
 docker container run --name tester \

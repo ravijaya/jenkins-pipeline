@@ -1,40 +1,51 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:6-alpine'
-            args '-p 3000:3000'
-        }
-    }
     environment {
-        CI = 'true'
+        registry = "gnschenker/jenkins-docker-test"
         DOCKER_PWD = credentials('docker-login-pwd')
     }
+    agent {
+        docker {
+            image 'gnschenker/node-docker'
+            args '-p 3000:3000'
+            args '-w /app'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
-        stage('Build') {
+        stage('Cloning Git') {
             steps {
-                echo 'Building...'
+                git 'https://github.com/gnschenker/jenkins-pipeline.git'
+            }
+        }
+        stage("Build"){
+            steps {
                 sh 'npm install'
             }
         }
-        stage('Test') {
+        stage("Test"){
             steps {
-                echo 'Testing...'
                 sh 'npm test'
             }
         }
-        stage('Build & Push Docker image') {
+        stage("Build & Push Docker image") {
             steps {
-                sh './jenkins/scripts/build-and-push.sh'
+                sh 'docker image build -t $registry:$BUILD_NUMBER .'
+                sh 'docker login -u gnschenker -p $DOCKER_PWD'
+                sh 'docker image push $registry:$BUILD_NUMBER'
+                sh "docker image rm $registry:$BUILD_NUMBER"
             }
         }
-        stage('Deploy to Staging') {
-            steps {
-                echo 'Deploy to Staging...'
+        stage('Deploy and smoke test') {
+            steps{
+                sh './jenkins/scripts/deploy.sh'
             }
         }
-        stage('Deploy to Production') {
-            steps {
-                echo 'Deploy to Production...'
+        stage('Cleanup') {
+            steps{
+                sh './jenkins/scripts/cleanup.sh'
             }
         }
     }
