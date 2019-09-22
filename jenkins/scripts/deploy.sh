@@ -11,7 +11,7 @@ docker container run -d \
 docker container run --rm \
     -v /home/fod/ch07/jenkins-pipeline/jenkins/scripts:/scripts \
     --net test-net \
-    node:12.10-alpine /scripts/wait-for.sh
+    node:12.10-alpine sh -c "/scripts/wait-for.sh"
 
 echo "Smoke tests..."
 docker container run --name tester \
