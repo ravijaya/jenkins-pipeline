@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+echo "Removing api container if it exists..."
+docker container rm -f api || true
+
 echo "Deploying app ($registry:$BUILD_NUMBER)..."
 docker network create test-net
 
