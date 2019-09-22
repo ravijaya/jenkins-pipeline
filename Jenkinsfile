@@ -7,6 +7,7 @@ pipeline {
     }
     environment {
         CI = 'true'
+        DOCKER_PWD = credentials('docker-login-pwd')
     }
     stages {
         stage('Build') {
@@ -19,6 +20,11 @@ pipeline {
             steps {
                 echo 'Testing...'
                 sh 'npm test'
+            }
+        }
+        stage('Build & Push Docker image') {
+            steps {
+                sh './jenkins/scripts/build_and_push.sh'
             }
         }
         stage('Deploy to Staging') {
