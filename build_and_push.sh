@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env sh
 
 echo "Building Docker image"
 docker image build -t gnschenker/jenkins-node-sample .
