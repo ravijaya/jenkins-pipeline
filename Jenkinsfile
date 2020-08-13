@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "ravijaya/jenkins-docker-test"
-        i//DOCKER_PWD = credentials('docker-login-pwd')
+        //DOCKER_PWD = credentials('docker-login-pwd')
     }
     agent {
         docker {
