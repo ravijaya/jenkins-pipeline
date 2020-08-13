@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "ravijaya/jenkins-docker-test"
-        DOCKER_PWD = credentials('docker-login-pwd')
+        i//DOCKER_PWD = credentials('docker-login-pwd')
     }
     agent {
         docker {
@@ -28,9 +28,9 @@ pipeline {
         stage("Build & Push Docker image") {
             steps {
                 sh 'docker image build -t $registry:$BUILD_NUMBER .'
-                sh 'docker login -u ravijaya -p $DOCKER_PWD'
-                sh 'docker image push $registry:$BUILD_NUMBER'
-                sh "docker image rm $registry:$BUILD_NUMBER"
+                //sh 'docker login -u ravijaya -p $DOCKER_PWD'
+                //sh 'docker image push $registry:$BUILD_NUMBER'
+                //sh "docker image rm $registry:$BUILD_NUMBER"
             }
         }
         stage('Deploy and smoke test') {
